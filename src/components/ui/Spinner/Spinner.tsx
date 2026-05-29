@@ -1,4 +1,6 @@
-export function Spinner({ label = 'Loading…' }: { label?: string }) {
+import type { SpinnerProps } from './Spinner.types';
+
+export function Spinner({ label = 'Loading…' }: SpinnerProps) {
   return (
     <div
       role="status"

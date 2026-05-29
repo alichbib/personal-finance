@@ -1,9 +1,5 @@
-import { Button } from './Button';
-
-interface ErrorStateProps {
-  message: string;
-  onRetry?: () => void;
-}
+import { Button } from '../Button';
+import type { ErrorStateProps } from './ErrorState.types';
 
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
