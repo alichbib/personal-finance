@@ -39,5 +39,6 @@ The backend (`personal-finance-ms`) must be running for data to load.
 - `src/components/layout` — app shell + sidebar + auth layout
 - `src/components/ui` — Button, Card, Spinner, EmptyState, ErrorState
 - `src/api` — typed API calls per resource
+- `src/lib` — Axios client, formatting, and error helpers
 - `src/store/authStore.ts` — persisted auth session (token + user)
 - `src/hooks/useFetch.ts` — small data-fetching hook with loading/error states
