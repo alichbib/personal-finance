@@ -1,8 +1,14 @@
 import { useCallback, useState } from 'react';
 import { getDashboardSummary } from '../api/dashboard';
 import { useFetch } from '../hooks/useFetch';
-import { currentMonth, formatMoney, formatMonthLabel } from '../lib/format';
+import {
+  currentMonth,
+  formatMoney,
+  formatMonthLabel,
+  shiftMonth,
+} from '../lib/format';
 import { useAuthStore } from '../store/authStore';
+import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Spinner } from '../components/ui/Spinner';
 import { ErrorState } from '../components/ui/ErrorState';
@@ -31,7 +37,7 @@ function StatCard({
 
 export function DashboardPage() {
   const user = useAuthStore((state) => state.user);
-  const [month] = useState(currentMonth());
+  const [month, setMonth] = useState(currentMonth());
 
   const fetchSummary = useCallback(() => getDashboardSummary(month), [month]);
   const { data, loading, error, refetch } = useFetch(fetchSummary);
@@ -40,16 +46,34 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <header>
-        <p className="text-sm font-medium text-emerald-700">
-          {formatMonthLabel(month)}
-        </p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
-          Hello{greetingName ? `, ${greetingName}` : ''}
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Here's how your money is moving this month.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+            Hello{greetingName ? `, ${greetingName}` : ''}
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Here's how your money is moving.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            aria-label="Previous month"
+            onClick={() => setMonth((current) => shiftMonth(current, -1))}
+          >
+            ‹
+          </Button>
+          <span className="min-w-[8.5rem] text-center text-sm font-semibold text-slate-700">
+            {formatMonthLabel(month)}
+          </span>
+          <Button
+            variant="secondary"
+            aria-label="Next month"
+            onClick={() => setMonth((current) => shiftMonth(current, 1))}
+          >
+            ›
+          </Button>
+        </div>
       </header>
 
       {loading ? (
