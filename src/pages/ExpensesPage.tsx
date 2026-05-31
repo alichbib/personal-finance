@@ -34,6 +34,8 @@ export function ExpensesPage() {
   const expensesQuery = useFetch(fetchExpenses);
   const categoriesQuery = useFetch(fetchCategories);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
 
   const categories = categoriesQuery.data ?? [];
   const hasCategories = categories.length > 0;
@@ -85,6 +87,17 @@ export function ExpensesPage() {
       setActionError(getErrorMessage(err));
     }
   }
+
+  const allExpenses = expensesQuery.data ?? [];
+  const normalizedSearch = search.trim().toLowerCase();
+  const filteredExpenses = allExpenses.filter((expense) => {
+    const matchesSearch =
+      normalizedSearch === '' ||
+      expense.title.toLowerCase().includes(normalizedSearch);
+    const matchesCategory =
+      categoryFilter === '' || expense.categoryId === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="space-y-8">
@@ -221,49 +234,94 @@ export function ExpensesPage() {
           message={expensesQuery.error}
           onRetry={() => void expensesQuery.refetch()}
         />
-      ) : !expensesQuery.data || expensesQuery.data.length === 0 ? (
+      ) : allExpenses.length === 0 ? (
         <EmptyState
           title="No expenses yet"
           message="Add your first expense above to see it here."
         />
       ) : (
-        <Card className="p-0">
-          <ul className="divide-y divide-slate-100">
-            {expensesQuery.data.map((expense) => (
-              <li
-                key={expense.id}
-                className="flex items-center justify-between gap-4 px-6 py-4"
-              >
-                <div className="min-w-0">
-                  <p className="truncate font-medium text-slate-800">
-                    {expense.title}
-                  </p>
-                  <p className="mt-0.5 flex items-center gap-2 text-xs text-slate-500">
-                    <span
-                      className="h-2 w-2 rounded-full"
-                      style={{
-                        backgroundColor: expense.category?.color ?? '#94a3b8',
-                      }}
-                    />
-                    {expense.category?.name ?? 'Uncategorized'} ·{' '}
-                    {formatDate(expense.date)}
-                  </p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="font-semibold text-slate-900">
-                    {formatMoney(expense.amount)}
-                  </span>
-                  <Button
-                    variant="danger"
-                    onClick={() => void handleDelete(expense.id)}
+        <div className="space-y-4">
+          <Card>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="search" className={labelClass}>
+                  Search
+                </label>
+                <input
+                  id="search"
+                  className={inputClass}
+                  placeholder="Search by title"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="categoryFilter" className={labelClass}>
+                  Category
+                </label>
+                <select
+                  id="categoryFilter"
+                  className={selectClass}
+                  value={categoryFilter}
+                  onChange={(event) => setCategoryFilter(event.target.value)}
+                >
+                  <option value="">All categories</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </Card>
+
+          {filteredExpenses.length === 0 ? (
+            <EmptyState
+              title="No matching expenses"
+              message="Try a different search term or category."
+            />
+          ) : (
+            <Card className="p-0">
+              <ul className="divide-y divide-slate-100">
+                {filteredExpenses.map((expense) => (
+                  <li
+                    key={expense.id}
+                    className="flex items-center justify-between gap-4 px-6 py-4"
                   >
-                    Delete
-                  </Button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </Card>
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-slate-800">
+                        {expense.title}
+                      </p>
+                      <p className="mt-0.5 flex items-center gap-2 text-xs text-slate-500">
+                        <span
+                          className="h-2 w-2 rounded-full"
+                          style={{
+                            backgroundColor:
+                              expense.category?.color ?? '#94a3b8',
+                          }}
+                        />
+                        {expense.category?.name ?? 'Uncategorized'} ·{' '}
+                        {formatDate(expense.date)}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="font-semibold text-slate-900">
+                        {formatMoney(expense.amount)}
+                      </span>
+                      <Button
+                        variant="danger"
+                        onClick={() => void handleDelete(expense.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
+        </div>
       )}
     </div>
   );
