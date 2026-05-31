@@ -98,6 +98,10 @@ export function ExpensesPage() {
       categoryFilter === '' || expense.categoryId === categoryFilter;
     return matchesSearch && matchesCategory;
   });
+  const filteredTotal = filteredExpenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0,
+  );
 
   return (
     <div className="space-y-8">
@@ -275,6 +279,18 @@ export function ExpensesPage() {
               </div>
             </div>
           </Card>
+
+          {filteredExpenses.length > 0 && (
+            <div className="flex items-center justify-between px-1 text-sm">
+              <span className="text-slate-500">
+                {filteredExpenses.length}{' '}
+                {filteredExpenses.length === 1 ? 'expense' : 'expenses'}
+              </span>
+              <span className="font-semibold text-slate-900">
+                {formatMoney(filteredTotal)} total
+              </span>
+            </div>
+          )}
 
           {filteredExpenses.length === 0 ? (
             <EmptyState
