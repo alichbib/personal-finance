@@ -36,6 +36,7 @@ export function ExpensesPage() {
   const [actionError, setActionError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [sortBy, setSortBy] = useState('date-desc');
 
   const categories = categoriesQuery.data ?? [];
   const hasCategories = categories.length > 0;
@@ -102,6 +103,19 @@ export function ExpensesPage() {
     (sum, expense) => sum + expense.amount,
     0,
   );
+  const sortedExpenses = [...filteredExpenses].sort((a, b) => {
+    switch (sortBy) {
+      case 'date-asc':
+        return a.date.localeCompare(b.date);
+      case 'amount-desc':
+        return b.amount - a.amount;
+      case 'amount-asc':
+        return a.amount - b.amount;
+      case 'date-desc':
+      default:
+        return b.date.localeCompare(a.date);
+    }
+  });
 
   return (
     <div className="space-y-8">
@@ -246,7 +260,7 @@ export function ExpensesPage() {
       ) : (
         <div className="space-y-4">
           <Card>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-3">
               <div>
                 <label htmlFor="search" className={labelClass}>
                   Search
@@ -277,6 +291,22 @@ export function ExpensesPage() {
                   ))}
                 </select>
               </div>
+              <div>
+                <label htmlFor="sortBy" className={labelClass}>
+                  Sort by
+                </label>
+                <select
+                  id="sortBy"
+                  className={selectClass}
+                  value={sortBy}
+                  onChange={(event) => setSortBy(event.target.value)}
+                >
+                  <option value="date-desc">Newest first</option>
+                  <option value="date-asc">Oldest first</option>
+                  <option value="amount-desc">Highest amount</option>
+                  <option value="amount-asc">Lowest amount</option>
+                </select>
+              </div>
             </div>
           </Card>
 
@@ -300,7 +330,7 @@ export function ExpensesPage() {
           ) : (
             <Card className="p-0">
               <ul className="divide-y divide-slate-100">
-                {filteredExpenses.map((expense) => (
+                {sortedExpenses.map((expense) => (
                   <li
                     key={expense.id}
                     className="flex items-center justify-between gap-4 px-6 py-4"
