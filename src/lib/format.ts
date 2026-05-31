@@ -29,3 +29,10 @@ export function currentMonth(): string {
   const month = String(now.getMonth() + 1).padStart(2, '0');
   return `${now.getFullYear()}-${month}`;
 }
+
+export function shiftMonth(month: string, monthsToAdd: number): string {
+  const [year, monthNumber] = month.split('-').map(Number);
+  const shifted = new Date(Date.UTC(year, monthNumber - 1 + monthsToAdd, 1));
+  const paddedMonth = String(shifted.getUTCMonth() + 1).padStart(2, '0');
+  return `${shifted.getUTCFullYear()}-${paddedMonth}`;
+}

@@ -28,6 +28,10 @@ export function BudgetsPage() {
   const categories = categoriesQuery.data ?? [];
   const hasCategories = categories.length > 0;
 
+  const sortedBudgets = [...(budgetsQuery.data ?? [])].sort((a, b) =>
+    b.month.localeCompare(a.month),
+  );
+
   const {
     register,
     handleSubmit,
@@ -176,7 +180,7 @@ export function BudgetsPage() {
       ) : (
         <Card className="p-0">
           <ul className="divide-y divide-slate-100">
-            {budgetsQuery.data.map((budget) => (
+            {sortedBudgets.map((budget) => (
               <li
                 key={budget.id}
                 className="flex items-center justify-between gap-4 px-6 py-4"

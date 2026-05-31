@@ -5,6 +5,7 @@ import {
   deleteCategory,
   listCategories,
 } from '../api/categories';
+import { listExpenses } from '../api/expenses';
 import { useFetch } from '../hooks/useFetch';
 import { getErrorMessage } from '../lib/error';
 import { Card } from '../components/ui/Card';
@@ -23,8 +24,18 @@ const DEFAULT_COLOR = '#10b981';
 
 export function CategoriesPage() {
   const fetchCategories = useCallback(() => listCategories(), []);
+  const fetchExpenses = useCallback(() => listExpenses(), []);
   const { data, loading, error, refetch } = useFetch(fetchCategories);
+  const expensesQuery = useFetch(fetchExpenses);
   const [actionError, setActionError] = useState<string | null>(null);
+
+  const hasExpenseCounts = !expensesQuery.loading && !expensesQuery.error;
+  const expenseCountByCategoryId = (expensesQuery.data ?? []).reduce<
+    Record<string, number>
+  >((counts, expense) => {
+    counts[expense.categoryId] = (counts[expense.categoryId] ?? 0) + 1;
+    return counts;
+  }, {});
 
   const {
     register,
@@ -123,28 +134,39 @@ export function CategoriesPage() {
       ) : (
         <Card className="p-0">
           <ul className="divide-y divide-slate-100">
-            {data.map((category) => (
-              <li
-                key={category.id}
-                className="flex items-center justify-between px-6 py-4"
-              >
-                <span className="flex items-center gap-3">
-                  <span
-                    className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: category.color }}
-                  />
-                  <span className="font-medium text-slate-800">
-                    {category.name}
-                  </span>
-                </span>
-                <Button
-                  variant="danger"
-                  onClick={() => void handleDelete(category.id)}
+            {data.map((category) => {
+              const expenseCount = expenseCountByCategoryId[category.id] ?? 0;
+              const countLabel = `${expenseCount} ${
+                expenseCount === 1 ? 'expense' : 'expenses'
+              }`;
+              return (
+                <li
+                  key={category.id}
+                  className="flex items-center justify-between gap-4 px-6 py-4"
                 >
-                  Delete
-                </Button>
-              </li>
-            ))}
+                  <span className="flex items-center gap-3">
+                    <span
+                      className="h-3 w-3 rounded-full"
+                      style={{ backgroundColor: category.color }}
+                    />
+                    <span className="font-medium text-slate-800">
+                      {category.name}
+                    </span>
+                  </span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-xs text-slate-500">
+                      {hasExpenseCounts ? countLabel : '—'}
+                    </span>
+                    <Button
+                      variant="danger"
+                      onClick={() => void handleDelete(category.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </Card>
       )}
