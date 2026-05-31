@@ -34,6 +34,8 @@ export function ExpensesPage() {
   const expensesQuery = useFetch(fetchExpenses);
   const categoriesQuery = useFetch(fetchCategories);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [sortBy, setSortBy] = useState('date-desc');
@@ -86,6 +88,16 @@ export function ExpensesPage() {
       await expensesQuery.refetch();
     } catch (err) {
       setActionError(getErrorMessage(err));
+    }
+  }
+
+  async function confirmDelete(id: string) {
+    setDeletingId(id);
+    try {
+      await handleDelete(id);
+    } finally {
+      setDeletingId(null);
+      setPendingDeleteId(null);
     }
   }
 
@@ -355,12 +367,31 @@ export function ExpensesPage() {
                       <span className="font-semibold text-slate-900">
                         {formatMoney(expense.amount)}
                       </span>
-                      <Button
-                        variant="danger"
-                        onClick={() => void handleDelete(expense.id)}
-                      >
-                        Delete
-                      </Button>
+                      {pendingDeleteId === expense.id ? (
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="danger"
+                            disabled={deletingId === expense.id}
+                            onClick={() => void confirmDelete(expense.id)}
+                          >
+                            {deletingId === expense.id ? 'Deleting…' : 'Confirm'}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            disabled={deletingId === expense.id}
+                            onClick={() => setPendingDeleteId(null)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="danger"
+                          onClick={() => setPendingDeleteId(expense.id)}
+                        >
+                          Delete
+                        </Button>
+                      )}
                     </div>
                   </li>
                 ))}
