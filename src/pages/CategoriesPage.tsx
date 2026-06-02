@@ -134,39 +134,43 @@ export function CategoriesPage() {
       ) : (
         <Card className="p-0">
           <ul className="divide-y divide-slate-100">
-            {data.map((category) => {
-              const expenseCount = expenseCountByCategoryId[category.id] ?? 0;
-              const countLabel = `${expenseCount} ${
-                expenseCount === 1 ? 'expense' : 'expenses'
-              }`;
-              return (
-                <li
-                  key={category.id}
-                  className="flex items-center justify-between gap-4 px-6 py-4"
-                >
-                  <span className="flex items-center gap-3">
-                    <span
-                      className="h-3 w-3 rounded-full"
-                      style={{ backgroundColor: category.color }}
-                    />
-                    <span className="font-medium text-slate-800">
-                      {category.name}
+            {[...data]
+              .sort((a, b) =>
+                a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+              )
+              .map((category) => {
+                const expenseCount = expenseCountByCategoryId[category.id] ?? 0;
+                const countLabel = `${expenseCount} ${
+                  expenseCount === 1 ? 'expense' : 'expenses'
+                }`;
+                return (
+                  <li
+                    key={category.id}
+                    className="flex items-center justify-between gap-4 px-6 py-4"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span
+                        className="h-3 w-3 rounded-full"
+                        style={{ backgroundColor: category.color }}
+                      />
+                      <span className="font-medium text-slate-800">
+                        {category.name}
+                      </span>
                     </span>
-                  </span>
-                  <div className="flex items-center gap-4">
-                    <span className="text-xs text-slate-500">
-                      {hasExpenseCounts ? countLabel : '—'}
-                    </span>
-                    <Button
-                      variant="danger"
-                      onClick={() => void handleDelete(category.id)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </li>
-              );
-            })}
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs text-slate-500">
+                        {hasExpenseCounts ? countLabel : '—'}
+                      </span>
+                      <Button
+                        variant="danger"
+                        onClick={() => void handleDelete(category.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </li>
+                );
+              })}
           </ul>
         </Card>
       )}
