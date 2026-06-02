@@ -73,6 +73,15 @@ export function DashboardPage() {
           >
             ›
           </Button>
+          {month !== currentMonth() ? (
+            <Button
+              variant="ghost"
+              className="px-3 py-2"
+              onClick={() => setMonth(currentMonth())}
+            >
+              This month
+            </Button>
+          ) : null}
         </div>
       </header>
 
