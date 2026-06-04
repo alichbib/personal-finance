@@ -102,6 +102,13 @@ export function ExpensesPage() {
   }
 
   const allExpenses = expensesQuery.data ?? [];
+  const hasActiveFilters = search.trim() !== '' || categoryFilter !== '';
+
+  function clearFilters() {
+    setSearch('');
+    setCategoryFilter('');
+  }
+
   const normalizedSearch = search.trim().toLowerCase();
   const filteredExpenses = allExpenses.filter((expense) => {
     const matchesSearch =
@@ -320,6 +327,13 @@ export function ExpensesPage() {
                 </select>
               </div>
             </div>
+            {hasActiveFilters && (
+              <div className="mt-4 flex justify-end">
+                <Button variant="ghost" onClick={clearFilters}>
+                  Clear filters
+                </Button>
+              </div>
+            )}
           </Card>
 
           {filteredExpenses.length > 0 && (
