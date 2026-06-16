@@ -4,6 +4,13 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-app text-ink font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  /* tabular numerals for currency / numeric data */
+  .tnum {
+    font-variant-numeric: tabular-nums;
   }
 }
