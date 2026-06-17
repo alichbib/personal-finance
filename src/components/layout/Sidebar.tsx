@@ -1,126 +1,70 @@
-import type { ReactNode } from 'react';
+import { LogOut } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-
-interface NavItem {
-  to: string;
-  label: string;
-  icon: ReactNode;
-}
-
-const navItems: NavItem[] = [
-  {
-    to: '/dashboard',
-    label: 'Dashboard',
-    icon: (
-      <>
-        <rect x="3" y="3" width="8" height="8" rx="1.5" />
-        <rect x="13" y="3" width="8" height="5" rx="1.5" />
-        <rect x="13" y="11" width="8" height="10" rx="1.5" />
-        <rect x="3" y="14" width="8" height="7" rx="1.5" />
-      </>
-    ),
-  },
-  {
-    to: '/expenses',
-    label: 'Expenses',
-    icon: (
-      <>
-        <rect x="3" y="6" width="18" height="12" rx="2" />
-        <path d="M3 10h18M7 15h4" />
-      </>
-    ),
-  },
-  {
-    to: '/categories',
-    label: 'Categories',
-    icon: (
-      <>
-        <path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z" />
-        <circle cx="7" cy="7" r="1.2" />
-      </>
-    ),
-  },
-  {
-    to: '/budgets',
-    label: 'Budgets',
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 3v9l6 4" />
-      </>
-    ),
-  },
-];
+import { firstNameFromEmail } from '../../lib/format';
+import { Logo } from '../ui/Logo';
+import { navItems } from './navItems';
 
 export function Sidebar() {
   const user = useAuthStore((state) => state.user);
   const clearSession = useAuthStore((state) => state.clearSession);
 
+  const firstName = firstNameFromEmail(user?.email);
+  const initials = `${(firstName[0] ?? 'A').toUpperCase()}M`;
+
   return (
-    <aside className="border-b border-slate-200 bg-white lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-64 lg:flex-shrink-0 lg:flex-col lg:border-b-0 lg:border-r">
-      <div className="flex items-center gap-2.5 px-5 py-5">
-        <div
-          aria-hidden="true"
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-5 w-5"
-          >
-            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-          </svg>
-        </div>
-        <span className="text-base font-semibold tracking-tight text-slate-900">
-          Finance
-        </span>
+    <aside className="sticky top-0 hidden h-screen w-[248px] flex-shrink-0 flex-col border-r border-border bg-surface folio:flex">
+      <div className="px-5 pb-[18px] pt-[22px]">
+        <Logo size="md" />
       </div>
 
-      <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col lg:overflow-visible lg:pb-0">
-        {navItems.map((item) => (
+      <nav className="flex flex-col gap-[3px] px-3 py-2">
+        {navItems.map(({ to, label, icon: Icon }) => (
           <NavLink
-            key={item.to}
-            to={item.to}
+            key={to}
+            to={to}
             className={({ isActive }) =>
-              `flex flex-shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+              `flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors focus:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/[.18] ${
                 isActive
-                  ? 'bg-emerald-50 text-emerald-700'
-                  : 'text-slate-600 hover:bg-slate-100'
+                  ? 'bg-primary-tint font-semibold text-primary-text'
+                  : 'font-medium text-ink-muted hover:bg-app'
               }`
             }
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.8}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-5 w-5"
-            >
-              {item.icon}
-            </svg>
-            {item.label}
+            {({ isActive }) => (
+              <>
+                <Icon
+                  size={18}
+                  strokeWidth={1.8}
+                  className={isActive ? 'text-primary' : 'text-ink-faint'}
+                  aria-hidden="true"
+                />
+                {label}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="hidden border-t border-slate-200 px-3 py-4 lg:block">
-        <div className="px-2 text-xs text-slate-500">Signed in as</div>
-        <div className="mb-3 mt-0.5 truncate px-2 text-sm font-medium text-slate-700">
-          {user?.email}
+      <div className="mt-auto border-t border-surface-muted px-3 py-3.5">
+        <div className="flex items-center gap-[11px] rounded-md px-2.5 py-2">
+          <div className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full bg-primary-tint text-[13px] font-semibold text-primary-text">
+            {initials}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-[13px] font-semibold leading-tight text-ink">
+              {firstName} Morgan
+            </div>
+            <div className="truncate text-xs text-ink-faint">{user?.email}</div>
+          </div>
         </div>
         <button
           type="button"
           onClick={clearSession}
-          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+          className="mt-1.5 flex w-full items-center gap-2.5 rounded-md bg-transparent px-3 py-2.5 text-[13px] font-medium text-ink-subtle transition-colors hover:bg-app hover:text-ink focus:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/[.18]"
         >
-          Log out
+          <LogOut size={17} strokeWidth={1.8} aria-hidden="true" />
+          Sign out
         </button>
       </div>
     </aside>
