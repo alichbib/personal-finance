@@ -1,4 +1,5 @@
 export interface ErrorStateProps {
-  message: string;
+  /** Body line; the fixed "Couldn't load your data" title sits above it. */
+  message?: string;
   onRetry?: () => void;
 }

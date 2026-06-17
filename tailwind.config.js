@@ -3,6 +3,10 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      screens: {
+        // Folio reflows the sidebar/grids at 860px; `folio:` ≈ this breakpoint.
+        folio: '860px',
+      },
       colors: {
         app: '#FAFAF9',
         surface: { DEFAULT: '#FFFFFF', hover: '#FCFCFB', muted: '#F4F4F2' },

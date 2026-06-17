@@ -3,7 +3,7 @@ import type { CardProps } from './Card.types';
 export function Card({ children, className = '' }: CardProps) {
   return (
     <div
-      className={`rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm ${className}`}
+      className={`rounded-card border border-border bg-surface p-[22px] shadow-card ${className}`}
     >
       {children}
     </div>
