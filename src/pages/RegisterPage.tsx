@@ -5,8 +5,8 @@ import { register as registerRequest } from '../api/auth';
 import { useAuthStore } from '../store/authStore';
 import { getErrorMessage } from '../lib/error';
 import { AuthLayout } from '../components/layout/AuthLayout';
-import { Button } from '../components/ui/Button';
-import { inputClass, labelClass } from '../components/ui/form';
+import { Input } from '../components/ui/Input';
+import { labelClass } from '../components/ui/form';
 
 interface RegisterForm {
   email: string;
@@ -21,7 +21,9 @@ export function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterForm>();
+  } = useForm<RegisterForm>({ defaultValues: { email: '', password: '' } });
+
+  const validationError = errors.email || errors.password;
 
   async function onSubmit(values: RegisterForm) {
     setSubmitError(null);
@@ -40,80 +42,62 @@ export function RegisterPage() {
   return (
     <AuthLayout
       title="Create your account"
-      subtitle="Start tracking your money in minutes."
+      subtitle="Start tracking your spending in seconds."
       footer={
         <>
           Already have an account?{' '}
-          <Link
-            to="/login"
-            className="font-medium text-emerald-700 hover:underline"
-          >
-            Log in
+          <Link to="/login" className="font-semibold text-primary">
+            Sign in
           </Link>
         </>
       }
     >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-      >
-        {submitError && (
-          <div
-            role="alert"
-            className="rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-sm text-rose-700"
-          >
-            {submitError}
-          </div>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <label htmlFor="email" className={labelClass}>
+          Email
+        </label>
+        <Input
+          id="email"
+          type="email"
+          autoComplete="email"
+          placeholder="you@example.com"
+          className="!h-11"
+          {...register('email', {
+            required: 'Please enter your email and password.',
+          })}
+        />
+
+        <label htmlFor="password" className={`${labelClass} mt-4`}>
+          Password
+        </label>
+        <Input
+          id="password"
+          type="password"
+          autoComplete="new-password"
+          placeholder="••••••••"
+          className="!h-11"
+          {...register('password', {
+            required: 'Please enter your email and password.',
+            minLength: {
+              value: 8,
+              message: 'Password must be at least 8 characters.',
+            },
+          })}
+        />
+
+        {(validationError || submitError) && (
+          <p role="alert" className="mt-3 text-[13px] text-danger">
+            {validationError?.message ?? submitError}
+          </p>
         )}
 
-        <div>
-          <label htmlFor="email" className={labelClass}>
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            autoComplete="email"
-            className={inputClass}
-            {...register('email', { required: 'Email is required' })}
-          />
-          {errors.email && (
-            <p className="mt-1 text-xs text-rose-600">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="password" className={labelClass}>
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            autoComplete="new-password"
-            aria-describedby="password-hint"
-            className={inputClass}
-            {...register('password', {
-              required: 'Password is required',
-              minLength: {
-                value: 8,
-                message: 'Password must be at least 8 characters',
-              },
-            })}
-          />
-          {errors.password ? (
-            <p className="mt-1 text-xs text-rose-600">
-              {errors.password.message}
-            </p>
-          ) : (
-            <p id="password-hint" className="mt-1 text-xs text-slate-500">
-              At least 8 characters.
-            </p>
-          )}
-        </div>
-
-        <Button type="submit" disabled={isSubmitting} className="w-full">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="mt-[22px] inline-flex h-11 w-full items-center justify-center rounded-md bg-primary text-sm font-semibold text-white shadow-primary-btn transition-colors hover:bg-primary-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/[.18]"
+        >
           {isSubmitting ? 'Creating…' : 'Create account'}
-        </Button>
+        </button>
       </form>
     </AuthLayout>
   );
