@@ -18,18 +18,23 @@ export function AuthLayout({
   caption,
 }: AuthLayoutProps) {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center p-6"
-      style={{
-        background:
-          'radial-gradient(120% 120% at 50% 0%, #F2F7F4 0%, #FAFAF9 55%)',
-      }}
-    >
+    <div className="relative flex min-h-screen flex-col items-center justify-start px-5 pb-8 pt-10 folio:justify-center folio:p-6">
+      {/* Radial backdrop — desktop only. On mobile the plain app background shows. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 hidden folio:block"
+        style={{
+          background:
+            'radial-gradient(120% 120% at 50% 0%, #F2F7F4 0%, #FAFAF9 55%)',
+        }}
+      />
       <div className="w-full max-w-[404px] animate-folioFade">
         <div className="mb-[30px] flex justify-center">
           <Logo size="lg" showShadow />
         </div>
-        <div className="rounded-card-lg border border-border bg-surface p-8 shadow-auth">
+        {/* Card chrome (surface, border, padding, shadow) only on desktop.
+            On mobile the form sits on the page using the screen padding only. */}
+        <div className="folio:rounded-card-lg folio:border folio:border-border folio:bg-surface folio:p-8 folio:shadow-auth">
           <h1 className="mb-1.5 text-[22px] font-semibold tracking-[-0.02em] text-ink">
             {title}
           </h1>
