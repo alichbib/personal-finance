@@ -7,7 +7,7 @@ import { getErrorMessage } from '../lib/error';
 import { currentMonth, formatMonthLabel, formatMoney } from '../lib/format';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Spinner } from '../components/ui/Spinner';
+import { SkeletonCard } from '../components/ui/SkeletonCard';
 import { ErrorState } from '../components/ui/ErrorState';
 import { EmptyState } from '../components/ui/EmptyState';
 import { inputClass, labelClass, selectClass } from '../components/ui/form';
@@ -166,7 +166,10 @@ export function BudgetsPage() {
       </Card>
 
       {budgetsQuery.loading ? (
-        <Spinner />
+        <div className="space-y-4">
+          <SkeletonCard height="130px" />
+          <SkeletonCard height="320px" />
+        </div>
       ) : budgetsQuery.error ? (
         <ErrorState
           message={budgetsQuery.error}

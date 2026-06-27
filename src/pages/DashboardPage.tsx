@@ -10,7 +10,7 @@ import {
 import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { Spinner } from '../components/ui/Spinner';
+import { SkeletonCard } from '../components/ui/SkeletonCard';
 import { ErrorState } from '../components/ui/ErrorState';
 
 function StatCard({
@@ -86,7 +86,17 @@ export function DashboardPage() {
       </header>
 
       {loading ? (
-        <Spinner />
+        <>
+          <section className="grid gap-4 sm:grid-cols-3">
+            <SkeletonCard height="118px" />
+            <SkeletonCard height="118px" />
+            <SkeletonCard height="118px" />
+          </section>
+          <section className="grid gap-6 lg:grid-cols-2">
+            <SkeletonCard height="320px" />
+            <SkeletonCard height="320px" />
+          </section>
+        </>
       ) : error ? (
         <ErrorState message={error} onRetry={() => void refetch()} />
       ) : data ? (

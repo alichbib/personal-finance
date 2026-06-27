@@ -10,7 +10,7 @@ import { useFetch } from '../hooks/useFetch';
 import { getErrorMessage } from '../lib/error';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Spinner } from '../components/ui/Spinner';
+import { SkeletonCard } from '../components/ui/SkeletonCard';
 import { ErrorState } from '../components/ui/ErrorState';
 import { EmptyState } from '../components/ui/EmptyState';
 import { inputClass, labelClass } from '../components/ui/form';
@@ -123,7 +123,10 @@ export function CategoriesPage() {
       </Card>
 
       {loading ? (
-        <Spinner />
+        <div className="space-y-4">
+          <SkeletonCard height="150px" />
+          <SkeletonCard height="300px" />
+        </div>
       ) : error ? (
         <ErrorState message={error} onRetry={() => void refetch()} />
       ) : !data || data.length === 0 ? (
