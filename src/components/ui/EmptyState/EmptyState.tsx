@@ -1,29 +1,31 @@
-import type { EmptyStateProps } from './EmptyState.types';
+import { BarChart3, List, Tag, Target } from 'lucide-react';
+import type { EmptyStateIcon, EmptyStateProps } from './EmptyState.types';
 
-export function EmptyState({ title, message, action }: EmptyStateProps) {
+const iconMap: Record<EmptyStateIcon, typeof List> = {
+  chart: BarChart3,
+  target: Target,
+  list: List,
+  tag: Tag,
+};
+
+export function EmptyState({
+  title,
+  message,
+  icon = 'list',
+  action,
+}: EmptyStateProps) {
+  const Icon = iconMap[icon];
+
   return (
-    <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
-      <div
-        aria-hidden="true"
-        className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.8}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-7 w-7"
-        >
-          <path d="M12 5v14M5 12h14" />
-        </svg>
+    <div className="flex flex-col items-center justify-center px-[18px] py-[30px] text-center">
+      <div className="mb-[15px] flex h-[50px] w-[50px] items-center justify-center rounded-[14px] bg-surface-muted">
+        <Icon size={23} strokeWidth={1.8} className="text-ink-faint" aria-hidden="true" />
       </div>
-      <div className="space-y-1">
-        <p className="text-base font-semibold text-slate-800">{title}</p>
-        <p className="text-sm text-slate-500">{message}</p>
+      <div className="text-[15px] font-semibold text-ink-secondary">{title}</div>
+      <div className="mt-1.5 max-w-[300px] text-[13.5px] leading-relaxed text-ink-faint">
+        {message}
       </div>
-      {action}
+      {action && <div className="mt-4">{action}</div>}
     </div>
   );
 }

@@ -1,10 +1,13 @@
 import type { ReactNode } from 'react';
+import { Logo } from '../ui/Logo';
 
 interface AuthLayoutProps {
   title: string;
   subtitle: string;
   children: ReactNode;
   footer: ReactNode;
+  /** Reassurance caption below the card. */
+  caption?: ReactNode;
 }
 
 export function AuthLayout({
@@ -12,34 +15,46 @@ export function AuthLayout({
   subtitle,
   children,
   footer,
+  caption,
 }: AuthLayoutProps) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-emerald-50/60 via-slate-50 to-slate-100 px-4 py-12">
-      <div className="w-full max-w-sm">
-        <div className="mb-6 flex flex-col items-center text-center">
-          <div
-            aria-hidden="true"
-            className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-6 w-6"
-            >
-              <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+    <div className="relative flex min-h-screen flex-col items-center justify-start px-5 pb-8 pt-10 folio:justify-center folio:p-6">
+      {/* Radial backdrop — desktop only. On mobile the plain app background shows. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 hidden folio:block"
+        style={{
+          background:
+            'radial-gradient(120% 120% at 50% 0%, #F2F7F4 0%, #FAFAF9 55%)',
+        }}
+      />
+      <div className="w-full max-w-[404px] animate-folioFade">
+        <div className="mb-[30px] flex justify-center">
+          <Logo size="lg" showShadow />
+        </div>
+        {/* Card chrome (surface, border, padding, shadow) only on desktop.
+            On mobile the form sits on the page using the screen padding only. */}
+        <div className="folio:rounded-card-lg folio:border folio:border-border folio:bg-surface folio:p-8 folio:shadow-auth">
+          <h1 className="mb-1.5 text-[22px] font-semibold tracking-[-0.02em] text-ink">
             {title}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
+          <p className="mb-6 text-sm leading-relaxed text-ink-subtle">
+            {subtitle}
+          </p>
+          {children}
+          <div className="mt-5 text-center text-[13px] text-ink-subtle">
+            {footer}
+          </div>
         </div>
-        {children}
-        <p className="mt-5 text-center text-sm text-slate-500">{footer}</p>
+        <p className="mt-[18px] text-center text-xs leading-relaxed text-ink-faint">
+          {caption ?? (
+            <>
+              Calm, private money tracking.
+              <br />
+              Your data stays yours.
+            </>
+          )}
+        </p>
       </div>
     </div>
   );

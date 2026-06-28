@@ -1,7 +1,6 @@
 import type { SkeletonCardProps } from './SkeletonCard.types';
 
-// A shimmering placeholder bar. Two tones (base / soft) so the card reads as
-// a title + value + meta + lines, matching the design's skeleton.
+// Shimmering bar; the two color pairs match the SkelCard reference.
 function ShimmerBar({
   width,
   height,
@@ -14,11 +13,11 @@ function ShimmerBar({
   soft?: boolean;
 }) {
   const gradient = soft
-    ? 'linear-gradient(90deg,#eef2f7 25%,#f8fafc 50%,#eef2f7 75%)'
-    : 'linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%)';
+    ? 'linear-gradient(90deg,#F4F4F2 25%,#FAFAF8 50%,#F4F4F2 75%)'
+    : 'linear-gradient(90deg,#F1F1EF 25%,#F8F8F6 50%,#F1F1EF 75%)';
   return (
     <div
-      className="animate-shimmer"
+      className="animate-folioShimmer"
       style={{
         width,
         height,
@@ -33,7 +32,7 @@ function ShimmerBar({
 export function SkeletonCard({ height = '118px' }: SkeletonCardProps) {
   return (
     <div
-      className="flex flex-col gap-3.5 overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm"
+      className="flex flex-col gap-3.5 overflow-hidden rounded-card border border-border bg-surface p-[22px] shadow-card"
       style={{ height }}
       aria-hidden="true"
     >

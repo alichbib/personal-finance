@@ -36,3 +36,48 @@ export function shiftMonth(month: string, monthsToAdd: number): string {
   const paddedMonth = String(shifted.getUTCMonth() + 1).padStart(2, '0');
   return `${shifted.getUTCFullYear()}-${paddedMonth}`;
 }
+
+const SHORT_MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+/** Short month + year, e.g. "Jun 2026" — used for budget month chips. */
+export function formatMonthShort(month: string): string {
+  const [year, monthNumber] = month.split('-').map(Number);
+  return `${SHORT_MONTHS[monthNumber - 1]} ${year}`;
+}
+
+/** Today's date as YYYY-MM-DD (local), for date-input defaults. */
+export function todayIso(): string {
+  const now = new Date();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${now.getFullYear()}-${m}-${d}`;
+}
+
+/** Time-of-day greeting by local hour. */
+export function greeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
+/** First name derived from an email local-part, capitalized. */
+export function firstNameFromEmail(email: string | undefined): string {
+  if (!email) return 'there';
+  const local = email.split('@')[0]?.split('.')[0] ?? '';
+  if (!local) return 'there';
+  return local.charAt(0).toUpperCase() + local.slice(1);
+}

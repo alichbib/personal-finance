@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 18px;">
+  <div style="width:50px;height:50px;border-radius:14px;background:#F4F4F2;display:flex;align-items:center;justify-content:center;margin-bottom:15px;">
+    <sc-if value="{{ isChart }}" hint-placeholder-val="{{ true }}">
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6" rx="1"/><rect x="13" y="7" width="3" height="10" rx="1"/></svg>
+    </sc-if>
+    <sc-if value="{{ isTarget }}" hint-placeholder-val="{{ false }}">
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/></svg>
+    </sc-if>
+    <sc-if value="{{ isList }}" hint-placeholder-val="{{ false }}">
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+    </sc-if>
+    <sc-if value="{{ isTag }}" hint-placeholder-val="{{ false }}">
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H11l9 9-6 6-9-9z"/></svg>
+    </sc-if>
+  </div>
+  <div style="font-size:15px;font-weight:600;color:#3F3F46;">{{ title }}</div>
+  <div style="font-size:13.5px;color:#A1A1AA;margin-top:6px;max-width:300px;line-height:1.5;">{{ body }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:360,&quot;height&quot;:200},&quot;icon&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;chart&quot;,&quot;target&quot;,&quot;list&quot;,&quot;tag&quot;],&quot;default&quot;:&quot;list&quot;},&quot;title&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nothing here yet&quot;},&quot;body&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Add your first item to get started.&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const icon = this.props.icon || 'list';
+    return {
+      isChart: icon === 'chart', isTarget: icon === 'target', isList: icon === 'list', isTag: icon === 'tag',
+      title: this.props.title || 'Nothing here yet', body: this.props.body || '',
+    };
+  }
+}
+</script>
+</body>
+</html>

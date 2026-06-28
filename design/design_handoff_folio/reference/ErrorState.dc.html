@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="background:#fff;border:1px solid #EEEEEC;border-radius:16px;padding:48px 24px;box-shadow:0 1px 2px rgba(16,24,40,.04);display:flex;flex-direction:column;align-items:center;text-align:center;">
+  <div style="width:52px;height:52px;border-radius:14px;background:#FEF2F2;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.42 0z"/></svg>
+  </div>
+  <div style="font-size:16px;font-weight:600;color:#18181B;">Couldn't load your data</div>
+  <div style="font-size:13.5px;color:#A1A1AA;margin-top:6px;max-width:340px;line-height:1.5;">Something went wrong while fetching this. Check your connection and try again.</div>
+  <button onClick="{{ onRetry }}" style="margin-top:20px;height:40px;padding:0 18px;border:none;border-radius:10px;background:#18181B;color:#fff;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s;" style-hover="background:#3F3F46;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>
+    Try again
+  </button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:260},&quot;onRetry&quot;:{&quot;editor&quot;:null}}"></script>
+</body>
+</html>
